@@ -1,0 +1,130 @@
+ .glass {
+     background: rgba(11, 19, 41, 0.7);
+     backdrop-filter: blur(12px);
+     -webkit-backdrop-filter: blur(12px);
+     border: 1px solid rgba(56, 189, 248, 0.1);
+ }
+
+ .neon-glow-cyan {
+     box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.4);
+ }
+
+ .neon-glow-emerald {
+     box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
+ }
+
+ /* Custom scrollbar */
+ ::-webkit-scrollbar {
+     width: 8px;
+ }
+
+ ::-webkit-scrollbar-track {
+     background: #030712;
+ }
+
+ ::-webkit-scrollbar-thumb {
+     background: #1e293b;
+     border-radius: 4px;
+ }
+
+ ::-webkit-scrollbar-thumb:hover {
+     background: #38bdf8;
+ }
+
+ /* --- Estilos unificados del Carnet a 60FPS --- */
+ .anclaje {
+     position: relative;
+     perspective: 1200px;
+     will-change: transform;
+     z-index: 40;
+ }
+
+ .lanyard-sistema {
+     transform-origin: top center;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     will-change: transform;
+ }
+
+ .caida-inicial {
+     animation: caerYRebotar 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+ }
+
+ @keyframes caerYRebotar {
+     0% {
+         transform: translateY(-600px) rotate(25deg);
+     }
+
+     35% {
+         transform: translateY(0) rotate(-18deg);
+     }
+
+     55% {
+         transform: translateY(0) rotate(10deg);
+     }
+
+     75% {
+         transform: translateY(0) rotate(-5deg);
+     }
+
+     90% {
+         transform: translateY(0) rotate(2deg);
+     }
+
+     100% {
+         transform: translateY(0) rotate(0deg);
+     }
+ }
+
+ .lanyard {
+     width: 8px;
+     height: 120px;
+     background: linear-gradient(to bottom, #1c2a54, #38bdf8);
+     box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+     border-radius: 4px;
+     transform-origin: top center;
+     will-change: transform;
+ }
+
+ .tarjeta-badge {
+     width: 256px;
+     /* w-64 */
+     height: 384px;
+     /* h-96 */
+     transform-origin: top center;
+     margin-top: -2px;
+     will-change: transform;
+ }
+
+ /* Transición suave por hardware para el retorno elástico */
+ .regresando .lanyard-sistema,
+ .regresando .lanyard,
+ .regresando .tarjeta-badge {
+     transition: transform 0.7s cubic-bezier(0.25, 1.25, 0.4, 1.1) !important;
+ }
+
+ /* Cursor de la máquina de escribir */
+ .cursor-escribiendo {
+     display: inline-block;
+     font-weight: 200;
+     animation: parpadear 0.8s infinite;
+     transition: opacity 0.5s ease;
+ }
+
+ @keyframes parpadear {
+
+     0%,
+     100% {
+         opacity: 1;
+     }
+
+     50% {
+         opacity: 0;
+     }
+ }
+
+ .ocultar-cursor {
+     opacity: 0;
+     animation: none;
+ }
