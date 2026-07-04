@@ -195,93 +195,90 @@ function filterProjects(category) {
 }
 
 // ==========================================================================
-// 5. --- DATOS DE LOS PROYECTOS Y MODALES ---
+// 5. --- ARQUITECTURA DINÁMICA: DATOS POR FETCH ASÍNCRONO (OPTIMIZADO) ---
 // ==========================================================================
-const projectData = {
-    clinica: {
-        title: "Sistema de Gestión de Clínica",
-        type: "Producción Real - Gestión Sanitaria",
-        desc: "Se estructuró una solución completa para automatizar y administrar clínicas privadas, controlando el flujo desde que el paciente reserva una cita hasta el balance contable final del día.",
-        challenge: "Se necesitaba agilizar el registro evitando errores manuales de identificación de pacientes y asegurar que los ingresos contables cuadrasen perfectamente sin pérdidas.",
-        solution: "Desarrollé la arquitectura bajo el patrón de diseño MVC utilizando PHP. Integré una API externa de identificación para buscar de manera automatizada y precisa los datos mediante DNI. Programé un sistema contable de arqueo diario de caja para reportar balances con un clic.",
-        stack: ["PHP", "Patrón MVC", "MySQL", "JavaScript / AJAX", "APIs de Identidad (DNI)"],
-        icon: "fa-notes-medical"
-    },
-    pasajes: {
-        title: "Pasajes Multiempresa",
-        type: "Proyecto Final Universitario de Ciclo",
-        desc: "Se concibió un portal centralizado que permite a los usuarios buscar y cotizar itinerarios de viajes terrestres de diversas compañías de buses en un único lugar.",
-        challenge: "Coordinar múltiples programaciones, rutas de viaje cambiantes de buses e implementar de forma simulada un sistema transaccional de compra que sea seguro y no permita sobreventas de asientos.",
-        solution: "Construido en el entorno corporativo de Java Web utilizando JSP, Servlets y base de datos MySQL relacional. Diseñé un modelo transaccional que asegura la disponibilidad de asientos en tiempo real y permite a los administradores parametrizar precios, flotas y horarios de viaje de múltiples cooperativas.",
-        stack: ["Java Web", "JSP & Servlets", "MySQL", "CSS3 Estructurado"],
-        icon: "fa-bus"
-    },
-    votacion: {
-        title: "Votación Electrónica Escolar",
-        type: "Proyecto de Prácticas Profesionales",
-        desc: "Desarrollo institutional creado para agilizar y modernizar el sufragio de estudiantes a cargos de representación estudiantil.",
-        challenge: "Los procesos electorales anteriores en papel tomaban horas de conteo manual y eran vulnerables a reclamos y errores de cálculo en el escrutinio de votos.",
-        solution: "Desarrollé un sistema web ágil e interactivo con PHP, MySQL y Javascript nativo. Al cerrar las urnas virtuales, el sistema realiza la sumatoria matemática y visualiza gráficos con los resultados finales de inmediato, garantizando transparencia absoluta.",
-        stack: ["PHP", "MySQL", "Vanilla JavaScript", "HTML5 & CSS3"],
-        icon: "fa-square-poll-horizontal"
-    }
-};
-
 const modal = document.getElementById('project-modal');
 const modalContent = document.getElementById('modal-content');
 
-function openModal(projectId) {
-    const data = projectData[projectId];
-    if (!data) return;
+// Función asíncrona para cargar los detalles del proyecto bajo demanda (Lazy Loading)
+async function openModal(projectId) {
+    try {
+        // 1. Buscamos el botón o tarjeta que disparó el evento para darle feedback visual de carga
+        const triggerButton = event?.currentTarget;
+        if (triggerButton) triggerButton.style.cursor = 'wait';
 
-    modalContent.innerHTML = `
-                <div class="flex items-center gap-4 pb-4 border-b border-white/10">
-                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
-                        <i class="fa-solid ${data.icon}"></i>
+        // 2. Consumo asíncrono del recurso JSON local
+        const response = await fetch('data/proyectos.json');
+
+        if (!response.ok) {
+            throw new Error(`Error al cargar los datos. Status: ${response.status}`);
+        }
+
+        const projectData = await response.json();
+        const data = projectData[projectId];
+
+        if (!data) {
+            console.error(`El ID de proyecto "${projectId}" no existe en el JSON.`);
+            if (triggerButton) triggerButton.style.cursor = '';
+            return;
+        }
+
+        // 3. Renderizado reactivo dentro del modal
+        modalContent.innerHTML = `
+            <div class="flex items-center gap-4 pb-4 border-b border-white/10">
+                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
+                    <i class="fa-solid ${data.icon}"></i>
+                </div>
+                <div>
+                    <h3 class="font-display font-bold text-2xl text-white">${data.title}</h3>
+                    <span class="text-xs text-cyan-400 font-semibold tracking-wide uppercase">${data.type}</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-sm leading-relaxed">
+                <div>
+                    <h4 class="font-display font-bold text-slate-200 mb-1">Descripción</h4>
+                    <p class="text-slate-400">${data.desc}</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <div class="bg-darkblue-950/50 p-4 rounded-xl border border-white/5">
+                        <h4 class="font-display font-bold text-emerald-400 text-xs uppercase tracking-wider mb-2">El Desafío</h4>
+                        <p class="text-xs text-slate-400">${data.challenge}</p>
                     </div>
-                    <div>
-                        <h3 class="font-display font-bold text-2xl text-white">${data.title}</h3>
-                        <span class="text-xs text-cyan-400 font-semibold tracking-wide uppercase">${data.type}</span>
+                    <div class="bg-darkblue-950/50 p-4 rounded-xl border border-white/5">
+                        <h4 class="font-display font-bold text-cyan-400 text-xs uppercase tracking-wider mb-2">La Solución</h4>
+                        <p class="text-xs text-slate-400">${data.solution}</p>
                     </div>
                 </div>
 
-                <div class="space-y-4 text-sm leading-relaxed">
-                    <div>
-                        <h4 class="font-display font-bold text-slate-200 mb-1">Descripción</h4>
-                        <p class="text-slate-400">${data.desc}</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                        <div class="bg-darkblue-950/50 p-4 rounded-xl border border-white/5">
-                            <h4 class="font-display font-bold text-emerald-400 text-xs uppercase tracking-wider mb-2">El Desafío</h4>
-                            <p class="text-xs text-slate-400">${data.challenge}</p>
-                        </div>
-                        <div class="bg-darkblue-950/50 p-4 rounded-xl border border-white/5">
-                            <h4 class="font-display font-bold text-cyan-400 text-xs uppercase tracking-wider mb-2">La Solución</h4>
-                            <p class="text-xs text-slate-400">${data.solution}</p>
-                        </div>
-                    </div>
-
-                    <div class="pt-2">
-                        <h4 class="font-display font-bold text-slate-200 mb-2">Tecnologías Clave</h4>
-                        <div class="flex flex-wrap gap-2">
-                            ${data.stack.map(tech => `<span class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 border border-white/5">${tech}</span>`).join('')}
-                        </div>
+                <div class="pt-2">
+                    <h4 class="font-display font-bold text-slate-200 mb-2">Tecnologías Clave</h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${data.stack.map(tech => `<span class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/5 text-slate-300 border border-white/5">${tech}</span>`).join('')}
                     </div>
                 </div>
+            </div>
 
-                <div class="flex gap-4 pt-6 border-t border-white/10">
-                    <a href="https://github.com/jos232004" target="_blank" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-darkblue-950 font-bold text-center hover:scale-[1.01] transition-transform duration-200">
-                        <i class="fa-brands fa-github mr-1"></i> Explorar en GitHub
-                    </a>
-                    <button onclick="closeModal()" class="px-6 py-3.5 rounded-xl border border-white/10 text-white hover:text-slate-200 font-bold transition-all duration-200">
-                        Cerrar
-                    </button>
-                </div>
-            `;
+            <div class="flex gap-4 pt-6 border-t border-white/10">
+                <a href="https://github.com/jos232004" target="_blank" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 text-darkblue-950 font-bold text-center hover:scale-[1.01] transition-transform duration-200">
+                    <i class="fa-brands fa-github mr-1"></i> Explorar en GitHub
+                </a>
+                <button onclick="closeModal()" class="px-6 py-3.5 rounded-xl border border-white/10 text-white hover:text-slate-200 font-bold transition-all duration-200">
+                    Cerrar
+                </button>
+            </div>
+        `;
 
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
+        // 4. Mostramos el modal y restauramos el cursor
+        if (triggerButton) triggerButton.style.cursor = '';
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+
+    } catch (error) {
+        console.error("Error crítico en la arquitectura de datos:", error);
+        alert("No se pudieron cargar los detalles del proyecto en este momento.");
+    }
 }
 
 function closeModal() {
