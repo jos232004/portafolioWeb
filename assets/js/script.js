@@ -1,46 +1,64 @@
-// --- EFECTO MÁQUINA DE ESCRIBIR (TYPEWRITER) ---
+// ==========================================================================
+// 1. --- EFECTO MÁQUINA DE ESCRIBIR CON BUCLE Y BORRADO (HERO SECTION) ---
+// ==========================================================================
 const textoTitulo = "Becerra Ymán";
-const textoSubtitulo = "Desarrollador Full-Stack & Estudiante de Ingeniería de Sistemas";
+const frasesSubtitulo = [
+    "Desarrollador Full-Stack",
+    "Estudiante de Ingeniería de Sistemas"
+];
 
 const elementoTitulo = document.getElementById('efecto-typing');
 const elementoSubtitulo = document.getElementById('efecto-subtitulo');
-const cursor = document.querySelector('.cursor-escribiendo');
-
-// Tiempos de escritura (en milisegundos por letra)
-const velocidadTitulo = 100;
-const velocidadSubtitulo = 40;
 
 let indexTitulo = 0;
-let indexSubtitulo = 0;
+let fraseActualIndex = 0;
+let letraIndex = 0;
+let estaBorrando = false;
 
 function escribirTitulo() {
     if (indexTitulo < textoTitulo.length) {
         elementoTitulo.textContent += textoTitulo.charAt(indexTitulo);
         indexTitulo++;
-        setTimeout(escribirTitulo, velocidadTitulo);
+        setTimeout(escribirTitulo, 100);
     } else {
-        // Cuando termine el título, esperamos un momento y empezamos el subtítulo
-        setTimeout(escribirSubtitulo, 300);
+        setTimeout(bucleSubtitulo, 400);
     }
 }
 
-function escribirSubtitulo() {
-    if (indexSubtitulo < textoSubtitulo.length) {
-        elementoSubtitulo.textContent += textoSubtitulo.charAt(indexSubtitulo);
-        indexSubtitulo++;
-        setTimeout(escribirSubtitulo, velocidadSubtitulo);
+function bucleSubtitulo() {
+    const textoCompleto = frasesSubtitulo[fraseActualIndex];
+
+    if (!estaBorrando) {
+        elementoSubtitulo.textContent = textoCompleto.substring(0, letraIndex + 1);
+        letraIndex++;
+
+        if (letraIndex === textoCompleto.length) {
+            estaBorrando = true;
+            setTimeout(bucleSubtitulo, 2000);
+            return;
+        }
+        setTimeout(bucleSubtitulo, 60);
     } else {
-        // Desvanecer el cursor elegantemente al finalizar todo
-        if (cursor) cursor.classList.add('ocultar-cursor');
+        elementoSubtitulo.textContent = textoCompleto.substring(0, letraIndex - 1);
+        letraIndex--;
+
+        if (letraIndex === 0) {
+            estaBorrando = false;
+            fraseActualIndex = (fraseActualIndex + 1) % frasesSubtitulo.length;
+            setTimeout(bucleSubtitulo, 200);
+            return;
+        }
+        setTimeout(bucleSubtitulo, 30);
     }
 }
 
-// Iniciar la animación al cargar la página por completo
 window.addEventListener('DOMContentLoaded', () => {
-    // Un pequeño delay inicial para que combine con la caída del carnet
-    setTimeout(escribirTitulo, 500);
+    setTimeout(escribirTitulo, 500); // Sincronizado con la caída del carnet
 });
-// --- LÓGICA DE FÍSICAS FLUIDAS PARA EL CARNET (60FPS) ---
+
+// ==========================================================================
+// 2. --- LÓGICA DE FÍSICAS FLUIDAS PARA EL CARNET (CORREGIDO Y BLINDADO) ---
+// ==========================================================================
 const sistema = document.getElementById('sistema');
 const cinta = document.getElementById('cinta');
 const tarjeta = document.getElementById('tarjeta');
@@ -54,43 +72,40 @@ sistema.addEventListener('animationend', () => {
 });
 
 function moverCarnet(clientX, clientY) {
+    if (!arrastrando) return;
     sistema.classList.remove('caida-inicial');
 
     const rectAnclaje = anclaje.getBoundingClientRect();
-    const origenX = rectAnclaje.left + (rectAnclaje.width / 2); // Ajustado al centro real del anclaje
+    const origenX = rectAnclaje.left + (rectAnclaje.width / 2);
     const origenY = rectAnclaje.top;
 
     const dx = clientX - origenX;
     const dy = clientY - origenY;
 
-    // Ángulo de inclinación del péndulo
+    // Control de fallos matemáticos por tirones bruscos (NaN guardrails)
+    if (isNaN(dx) || isNaN(dy)) return;
+
     const anguloRad = Math.atan2(dx, dy);
     const anguloDeg = -anguloRad * (180 / Math.PI);
-
-    // Distancia total recorrida por el cursor
     const distanciaTotal = Math.sqrt(dx * dx + dy * dy);
 
-    // Factor de estiramiento basado en la altura de la cinta (120px)
     let factorEstiramiento = (distanciaTotal - 80) / 120;
-    if (factorEstiramiento < 0.4) factorEstiramiento = 0.4; // Límites controlados
+    if (factorEstiramiento < 0.4) factorEstiramiento = 0.4;
     if (factorEstiramiento > 2.3) factorEstiramiento = 2.3;
 
-    // Cálculo del desplazamiento vertical de la tarjeta acoplada
     const desplazamientoTarjetaY = (factorEstiramiento - 1) * 120;
-
-    // Inclinación aerodinámica lateral 3D
     const inclinacionTarjeta3D = (dx * 0.15);
 
-    // Renderizado ultra-rápido por Hardware (GPU)
+    // Renderizado por aceleración de Hardware
     sistema.style.transform = `rotate(${anguloDeg}deg)`;
     cinta.style.transform = `scaleY(${factorEstiramiento})`;
     tarjeta.style.transform = `translateY(${desplazamientoTarjetaY}px) rotate(${anguloDeg * -0.2}deg) rotateY(${inclinacionTarjeta3D}deg)`;
 }
 
-// --- CAPTURA DE EVENTOS (MOUSE & TOUCH UNIFICADOS) ---
+// Controladores Unificados de Arrastre
 const iniciarArrastre = (e) => {
     arrastrando = true;
-    anclaje.style.zIndex = "100"; // Eleva el carnet sobre todo el contenido del portafolio
+    anclaje.style.zIndex = "100";
     document.body.classList.remove('regresando');
 };
 
@@ -100,35 +115,43 @@ const finalizarArrastre = () => {
 
     document.body.classList.add('regresando');
 
-    // Reseteo con transiciones elásticas controladas por CSS cubic-bezier
+    // Reseteo limpio de vuelta al origen
     sistema.style.transform = 'rotate(0deg)';
     cinta.style.transform = 'scaleY(1)';
     tarjeta.style.transform = 'translateY(0px) rotate(0deg) rotateY(0deg)';
 
-    // Limpieza de z-index tras terminar la transición elástica de regreso
     setTimeout(() => {
         if (!arrastrando) anclaje.style.zIndex = "40";
     }, 700);
 };
 
-// Listeners de Mouse
+// 🌟 SOLUCIÓN AL PROBLEMA FÍSICO: Rastrear movimiento y soltado a nivel de WINDOW global
 tarjeta.addEventListener('mousedown', iniciarArrastre);
+
 window.addEventListener('mousemove', (e) => {
     if (!arrastrando) return;
     window.requestAnimationFrame(() => moverCarnet(e.clientX, e.clientY));
 });
-window.addEventListener('mouseup', finalizarArrastre);
 
-// Listeners Táctiles (Mobile)
+window.addEventListener('mouseup', finalizarArrastre);
+// Freno de seguridad adicional por si el puntero abandona la ventana del navegador
+window.addEventListener('mouseleave', finalizarArrastre);
+
+// Listeners Táctiles Blindados (Mobile)
 tarjeta.addEventListener('touchstart', iniciarArrastre, { passive: true });
+
 window.addEventListener('touchmove', (e) => {
     if (!arrastrando) return;
     const touch = e.touches[0];
     window.requestAnimationFrame(() => moverCarnet(touch.clientX, touch.clientY));
 }, { passive: true });
-window.addEventListener('touchend', finalizarArrastre);
 
-// --- Control Menú Móvil ---
+window.addEventListener('touchend', finalizarArrastre);
+window.addEventListener('touchcancel', finalizarArrastre); // Captura llamadas o interrupciones en celular
+
+// ==========================================================================
+// 3. --- CONTROL MENÚ MÓVIL ---
+// ==========================================================================
 const btn = document.getElementById('mobile-menu-btn');
 const menu = document.getElementById('mobile-menu');
 
@@ -142,21 +165,20 @@ document.querySelectorAll('.mobile-link').forEach(link => {
     });
 });
 
-// --- Filtro de Proyectos ---
+// ==========================================================================
+// 4. --- FILTRO DE PROYECTOS ---
+// ==========================================================================
 function filterProjects(category) {
-    // Actualizar botones de filtro
     const buttons = document.querySelectorAll('.filter-btn');
     buttons.forEach(btn => {
         btn.classList.remove('active', 'bg-cyan-500', 'text-darkblue-950');
         btn.classList.add('border', 'border-white/5', 'text-slate-400');
     });
 
-    // Activar botón seleccionado
     const activeBtn = event.currentTarget;
     activeBtn.classList.remove('border', 'border-white/5', 'text-slate-400');
     activeBtn.classList.add('active', 'bg-cyan-500', 'text-darkblue-950');
 
-    // Filtrar cards de proyectos
     const cards = document.querySelectorAll('.project-card');
     cards.forEach(card => {
         if (category === 'todos' || card.getAttribute('data-cat') === category) {
@@ -167,7 +189,9 @@ function filterProjects(category) {
     });
 }
 
-// --- Datos de los Proyectos para las Modales ---
+// ==========================================================================
+// 5. --- DATOS DE LOS PROYECTOS Y MODALES ---
+// ==========================================================================
 const projectData = {
     clinica: {
         title: "Sistema de Gestión de Clínica",
@@ -190,7 +214,7 @@ const projectData = {
     votacion: {
         title: "Votación Electrónica Escolar",
         type: "Proyecto de Prácticas Profesionales",
-        desc: "Desarrollo institucional creado para agilizar y modernizar el sufragio de estudiantes a cargos de representación estudiantil.",
+        desc: "Desarrollo institutional creado para agilizar y modernizar el sufragio de estudiantes a cargos de representación estudiantil.",
         challenge: "Los procesos electorales anteriores en papel tomaban horas de conteo manual y eran vulnerables a reclamos y errores de cálculo en el escrutinio de votos.",
         solution: "Desarrollé un sistema web ágil e interactivo con PHP, MySQL y Javascript nativo. Al cerrar las urnas virtuales, el sistema realiza la sumatoria matemática y visualiza gráficos con los resultados finales de inmediato, garantizando transparencia absoluta.",
         stack: ["PHP", "MySQL", "Vanilla JavaScript", "HTML5 & CSS3"],
@@ -198,7 +222,6 @@ const projectData = {
     }
 };
 
-// --- Control de Ventana Modal ---
 const modal = document.getElementById('project-modal');
 const modalContent = document.getElementById('modal-content');
 
@@ -253,30 +276,29 @@ function openModal(projectId) {
             `;
 
     modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
+    document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
     modal.classList.add('hidden');
-    document.body.style.overflow = ''; // Restaurar scroll
+    document.body.style.overflow = '';
 }
 
-// Cerrar modal al hacer click fuera del contenedor
 window.addEventListener('click', (e) => {
     if (e.target === modal) {
         closeModal();
     }
 });
 
-// --- Gestión Formulario de Contacto ---
+// ==========================================================================
+// 6. --- GESTIÓN FORMULARIO DE CONTACTO ---
+// ==========================================================================
 function handleContactSubmit(event) {
     event.preventDefault();
 
-    // Simulación estética de procesamiento en servidor
     const form = document.getElementById('contact-form');
     const alert = document.getElementById('success-alert');
 
-    // Ocultar form con animación sutil, mostrar aviso de envío exitoso
     form.classList.add('opacity-50', 'pointer-events-none');
 
     setTimeout(() => {
@@ -284,9 +306,54 @@ function handleContactSubmit(event) {
         form.classList.remove('opacity-50', 'pointer-events-none');
         alert.classList.remove('hidden');
 
-        // Ocultar alerta de éxito automáticamente tras 6 segundos
         setTimeout(() => {
             alert.classList.add('hidden');
         }, 6000);
     }, 1000);
+}
+
+// ==========================================================================
+// 7. --- EFECTO MÁQUINA DE ESCRIBIR EN EL AVATAR (SOBRE MÍ) ---
+// ==========================================================================
+const textoAvatarUser = "jos232004";
+const textoAvatarRol = "Full-Stack Dev";
+
+const elementoAvatarUser = document.getElementById('typing-avatar');
+const elementoAvatarRol = document.getElementById('typing-rol');
+const cursorAvatar = document.querySelector('#sobre-mi .cursor-escribiendo');
+
+let idxUser = 0;
+let idxRol = 0;
+let sobreMiAnimado = false;
+
+function escribirAvatar() {
+    if (idxUser < textoAvatarUser.length) {
+        elementoAvatarUser.textContent += textoAvatarUser.charAt(idxUser);
+        idxUser++;
+        setTimeout(escribirAvatar, 90);
+    }
+    else if (idxRol < textoAvatarRol.length) {
+        elementoAvatarRol.textContent += textoAvatarRol.charAt(idxRol);
+        idxRol++;
+        setTimeout(escribirAvatar, 60);
+    }
+    else {
+        setTimeout(() => {
+            if (cursorAvatar) cursorAvatar.style.display = 'none';
+        }, 1500);
+    }
+}
+
+const observerSobreMi = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !sobreMiAnimado) {
+            sobreMiAnimado = true;
+            setTimeout(escribirAvatar, 300);
+        }
+    });
+}, { threshold: 0.25 });
+
+const seccionSobreMi = document.getElementById('sobre-mi');
+if (seccionSobreMi) {
+    observerSobreMi.observe(seccionSobreMi);
 }
