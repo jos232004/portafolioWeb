@@ -125,7 +125,7 @@ const finalizarArrastre = () => {
     }, 700);
 };
 
-// 🌟 SOLUCIÓN AL PROBLEMA FÍSICO: Rastrear movimiento y soltado a nivel de WINDOW global
+// Rastrear movimiento y soltado a nivel de WINDOW global para PC
 tarjeta.addEventListener('mousedown', iniciarArrastre);
 
 window.addEventListener('mousemove', (e) => {
@@ -134,20 +134,25 @@ window.addEventListener('mousemove', (e) => {
 });
 
 window.addEventListener('mouseup', finalizarArrastre);
-// Freno de seguridad adicional por si el puntero abandona la ventana del navegador
 window.addEventListener('mouseleave', finalizarArrastre);
 
-// Listeners Táctiles Blindados (Mobile)
+// 📱 LISTENERS TÁCTILES BLINDADOS (EVITA EL SCROLL DE LA WEB EN MÓVILES)
 tarjeta.addEventListener('touchstart', iniciarArrastre, { passive: true });
 
 window.addEventListener('touchmove', (e) => {
     if (!arrastrando) return;
+
+    // 🌟 AQUÍ ESTÁ EL CAMBIO: Cancela por completo el scroll nativo del navegador móvil
+    if (e.cancelable) {
+        e.preventDefault();
+    }
+
     const touch = e.touches[0];
     window.requestAnimationFrame(() => moverCarnet(touch.clientX, touch.clientY));
-}, { passive: true });
+}, { passive: false }); // 🌟 CAMBIADO A FALSE: Obligatorio para permitir el preventDefault()
 
 window.addEventListener('touchend', finalizarArrastre);
-window.addEventListener('touchcancel', finalizarArrastre); // Captura llamadas o interrupciones en celular
+window.addEventListener('touchcancel', finalizarArrastre);
 
 // ==========================================================================
 // 3. --- CONTROL MENÚ MÓVIL ---
