@@ -26,6 +26,7 @@
                 }
             }
         }
+
     </script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,6 +40,11 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <!-- Librería para Iconos de Tecnologías (Devicon) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    <style>
+        #project-slider::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
 
 <body
@@ -390,11 +396,11 @@
                                     <i class="devicon-react-original colored text-lg"></i>
                                     <span>React.js</span>
                                 </div>
-                                <span class="text-cyan-400">60%</span>
+                                <span class="text-cyan-400">40%</span>
                             </div>
                             <div class="h-2 w-full bg-slate-950/60 rounded-full overflow-hidden border border-white/5">
                                 <div class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
-                                    style="width: 60%;"></div>
+                                    style="width: 40%;"></div>
                             </div>
                         </div>
                         <!-- Tech 4: Tailwind / Bootstrap -->
@@ -551,37 +557,44 @@
         </div>
     </section>
 
-    <!-- ==================== PROYECTOS DESTACADOS ==================== -->
+    <!-- ==================== PROYECTOS DESTACADOS (CARRUSEL) ==================== -->
     <section id="proyectos" class="py-24 px-6 bg-darkblue-900/50 border-y border-white/5 relative">
         <div class="max-w-6xl mx-auto z-10 relative">
-            <div class="text-center mb-12">
-                <p class="text-cyan-400 font-bold tracking-wider uppercase text-sm mb-2">// 03. Mi Portafolio</p>
-                <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-4">Proyectos Reales &amp;
-                    Académicos</h2>
-                <p class="text-slate-400 max-w-xl mx-auto">Selección de sistemas complejos creados bajo principios de
-                    código óptimo e impacto real.</p>
+
+            <!-- Cabecera y Controles de Navegación -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div class="text-center md:text-left">
+                    <p class="text-cyan-400 font-bold tracking-wider uppercase text-sm mb-2">// 03. Mi Portafolio</p>
+                    <h2 class="font-display font-bold text-3xl md:text-4xl text-white mb-3">Proyectos Reales &amp;
+                        Académicos</h2>
+                    <p class="text-slate-400 max-w-xl">Desliza para explorar los sistemas desarrollados bajo principios
+                        de código óptimo e impacto real.</p>
+                </div>
+
+                <!-- Flechas de Control del Carrusel -->
+                <div class="flex justify-center gap-3">
+                    <button onclick="moveSlider('left')"
+                        class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:bg-cyan-500 hover:text-darkblue-950 flex items-center justify-center transition-all duration-300">
+                        <i class="fa-solid fa-chevron-left text-lg"></i>
+                    </button>
+                    <button onclick="moveSlider('right')"
+                        class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:bg-cyan-500 hover:text-darkblue-950 flex items-center justify-center transition-all duration-300">
+                        <i class="fa-solid fa-chevron-right text-lg"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Filtros interactivos -->
-            <div class="flex justify-center items-center gap-4 mb-12 flex-wrap text-sm font-semibold">
-                <button onclick="filterProjects('todos')"
-                    class="filter-btn active px-6 py-2.5 rounded-xl bg-cyan-500 text-darkblue-950 transition-all duration-300">Todos</button>
-                <button onclick="filterProjects('mvc')"
-                    class="filter-btn px-6 py-2.5 rounded-xl border border-white/5 text-slate-400 hover:text-white transition-all duration-300">PHP
-                    (MVC)</button>
-                <button onclick="filterProjects('java')"
-                    class="filter-btn px-6 py-2.5 rounded-xl border border-white/5 text-slate-400 hover:text-white transition-all duration-300">Java
-                    Web</button>
-            </div>
+            <!-- Contenedor del Carrusel (Scroll Horizontal Oculto) -->
+            <div id="project-slider" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-6"
+                style="scrollbar-width: none; -ms-overflow-style: none;">
+                <!-- Para navegadores basados en Webkit (Chrome/Safari) se oculta en el bloque de estilos abajo -->
 
-            <!-- Grilla de Proyectos -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Proyecto 1: Clínica -->
-                <div class="project-card glass rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-500/20 group hover:scale-[1.01] transition-all duration-300"
-                    data-cat="mvc">
+                <div
+                    class="project-card snap-start shrink-0 w-[290px] md:w-[350px] glass rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-500/20 group hover:scale-[1.01] transition-all duration-300">
                     <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center">
                         <img src="assets/img/ClinicaProy.png" alt="Proyecto Sistema de Gestión de Clínica"
-                            id="badge-photo" class="w-full h-full object-cover">
+                            class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-darkblue-950 to-transparent"></div>
                         <div class="absolute top-4 left-4">
                             <span
@@ -589,104 +602,163 @@
                                 Real</span>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-display font-semibold text-lg text-white mb-2">Sistema de Gestión de Clínica
-                        </h3>
-                        <p class="text-slate-400 text-sm mb-4 line-clamp-3">
-                            Completo software para digitalizar citas médicas, registro de pacientes integrado a API de
-                            DNI, historias clínicas digitales y flujo de arqueo diario de caja.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">PHP</span>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MySQL</span>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MVC</span>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">APIs</span>
+                    <div class="p-6 flex flex-col justify-between h-[260px]">
+                        <div>
+                            <h3 class="font-display font-semibold text-lg text-white mb-2">Sistema de Gestión de Clínica
+                            </h3>
+                            <p class="text-slate-400 text-sm mb-4 line-clamp-3">
+                                Completo software para digitalizar citas médicas, registro de pacientes integrado a API
+                                de DNI, historias clínicas digitales y flujo de arqueo diario de caja.
+                            </p>
                         </div>
-                        <button onclick="openModal('clinica')"
-                            class="w-full py-3 rounded-xl bg-white/5 hover:bg-cyan-500 hover:text-darkblue-950 font-semibold text-center block transition-all duration-300">
-                            Ver Detalles <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
-                        </button>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">PHP</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MySQL</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MVC</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">APIs</span>
+                            </div>
+                            <button onclick="openModal('clinica')"
+                                class="w-full py-3 rounded-xl bg-white/5 hover:bg-cyan-500 hover:text-darkblue-950 font-semibold text-sm text-center block transition-all duration-300">
+                                Ver Detalles <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Proyecto 2: Venta de Pasajes -->
-                <div class="project-card glass rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-500/20 group hover:scale-[1.01] transition-all duration-300"
-                    data-cat="java">
+                <div
+                    class="project-card snap-start shrink-0 w-[290px] md:w-[350px] glass rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-500/20 group hover:scale-[1.01] transition-all duration-300">
                     <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center">
-                        <img src="assets/img/Andebus.png" alt="Proyectos Venta de Pasajes" id="badge-photo"
+                        <img src="assets/img/Andebus.png" alt="Proyectos Venta de Pasajes"
                             class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-darkblue-950 to-transparent"></div>
                         <div class="absolute top-4 left-4">
                             <span
-                                class="px-3 py-1 text-xs font-bold rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">Universitario
-                                Final</span>
+                                class="px-3 py-1 text-xs font-bold rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">Académico</span>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-display font-semibold text-lg text-white mb-2">Sistema de Pasajes Multiempresa
-                        </h3>
-                        <p class="text-slate-400 text-sm mb-4 line-clamp-3">
-                            Plataforma inteligente para la búsqueda, comparación y venta web de pasajes de múltiples
-                            consorcios interprovinciales.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">Java
-                                Web</span>
-                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">JSP
-                                &amp; Servlet</span>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MySQL</span>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">CSS3</span>
+                    <div class="p-6 flex flex-col justify-between h-[260px]">
+                        <div>
+                            <h3 class="font-display font-semibold text-lg text-white mb-2">Pasajes Multiempresa</h3>
+                            <p class="text-slate-400 text-sm mb-4 line-clamp-3">
+                                Plataforma inteligente para la búsqueda, comparación y venta web de pasajes de múltiples
+                                consorcios interprovinciales.
+                            </p>
                         </div>
-                        <button onclick="openModal('pasajes')"
-                            class="w-full py-3 rounded-xl bg-white/5 hover:bg-cyan-500 hover:text-darkblue-950 font-semibold text-center block transition-all duration-300">
-                            Ver Detalles <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
-                        </button>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">Java
+                                    Web</span>
+                                <span class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">JSP
+                                    & Servlets</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MySQL</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">CSS3</span>
+                            </div>
+                            <button onclick="openModal('pasajes')"
+                                class="w-full py-3 rounded-xl bg-white/5 hover:bg-cyan-500 hover:text-darkblue-950 font-semibold text-sm text-center block transition-all duration-300">
+                                Ver Detalles <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Proyecto 3: Votación Electrónica -->
-                <div class="project-card glass rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-500/20 group hover:scale-[1.01] transition-all duration-300"
-                    data-cat="mvc">
+                <div
+                    class="project-card snap-start shrink-0 w-[290px] md:w-[350px] glass rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-500/20 group hover:scale-[1.01] transition-all duration-300">
                     <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center">
-                        <img src="assets/img/votacion.png" alt="Proyectos Venta de Pasajes" id="badge-photo"
+                        <img src="assets/img/votacion.png" alt="Proyecto Votación Electrónica"
                             class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-darkblue-950 to-transparent"></div>
                         <div class="absolute top-4 left-4">
                             <span
-                                class="px-3 py-1 text-xs font-bold rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">Prácticas</span>
+                                class="px-3 py-1 text-xs font-bold rounded bg-cyan-500/10 text-cyan-500 border border-cyan-500/20 uppercase tracking-wider">Producción real</span>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-display font-semibold text-lg text-white mb-2">Sistema de Votación Escolar</h3>
-                        <p class="text-slate-400 text-sm mb-4 line-clamp-3">
-                            Construido durante mis prácticas profesionales para automatizar las votaciones
-                            estudiantiles, eliminando papel y logrando un escrutinio inmediato y transparente.
-                        </p>
-                        <div class="flex flex-wrap gap-2 mb-6">
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">PHP</span>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MySQL</span>
-                            <span
-                                class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">JavaScript</span>
-                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">HTML /
-                                CSS</span>
+                    <div class="p-6 flex flex-col justify-between h-[260px]">
+                        <div>
+                            <h3 class="font-display font-semibold text-lg text-white mb-2">Sistema de Votación Escolar
+                            </h3>
+                            <p class="text-slate-400 text-sm mb-4 line-clamp-3">
+                                Construido durante mis prácticas profesionales para automatizar las votaciones
+                                estudiantiles, eliminando papel y logrando un escrutinio inmediato.
+                            </p>
                         </div>
-                        <button onclick="openModal('votacion')"
-                            class="w-full py-3 rounded-xl bg-white/5 hover:bg-cyan-500 hover:text-darkblue-950 font-semibold text-center block transition-all duration-300">
-                            Ver Detalles <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
-                        </button>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">PHP</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">MySQL</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">JavaScript</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">HTML/CSS</span>
+                            </div>
+                            <button onclick="openModal('votacion')"
+                                class="w-full py-3 rounded-xl bg-white/5 hover:bg-cyan-500 hover:text-darkblue-950 font-semibold text-sm text-center block transition-all duration-300">
+                                Ver Detalles <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Proyecto 4: DCG BIOMEDIC -->
+                <div
+                    class="project-card snap-start shrink-0 w-[290px] md:w-[350px] glass rounded-2xl overflow-hidden border border-white/5 hover:border-cyan-500/20 group hover:scale-[1.01] transition-all duration-300">
+                    <div class="relative h-48 overflow-hidden bg-slate-900 flex items-center justify-center">
+                        <img src="assets/img/dcgbiomedix.png" alt="Sitio Web DCG BIOMEDIC"
+                            class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darkblue-950 to-transparent"></div>
+                        <div class="absolute top-4 left-4">
+                            <span
+                                class="px-3 py-1 text-xs font-bold rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase tracking-wider">En
+                                Vivo</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col justify-between h-[260px]">
+                        <div>
+                            <h3 class="font-display font-semibold text-lg text-white mb-2">Catálogo — DCG BIOMEDIC</h3>
+                            <p class="text-slate-400 text-sm mb-4 line-clamp-3">
+                                Plataforma web para la venta y soporte de equipos médicos. Incorpora un catálogo
+                                dinámico filtrado por áreas mediante asincronía y lectura de datos JSON.
+                            </p>
+                        </div>
+                        <div>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">HTML/CSS</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">JavaScript
+                                    (ES6)</span>
+                                <span
+                                    class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-white/5 text-slate-300">JSON</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openModal('biomedic')"
+                                    class="py-3 rounded-xl bg-white/5 hover:bg-white/10 font-semibold text-center text-xs block transition-all duration-300">
+                                    Info
+                                </button>
+                                <a href="https://jos232004.github.io/dcgbiomedic/" target="_blank"
+                                    class="py-3 rounded-xl bg-cyan-500 text-darkblue-950 hover:bg-cyan-400 font-bold text-center text-xs block transition-all duration-300">
+                                    Ver <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-0.5"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
+
 
     <!-- ==================== EDUCACIÓN & EXPERIENCIA ==================== -->
     <section id="experiencia" class="py-24 px-6 relative">
@@ -707,7 +779,7 @@
                             class="text-xs font-bold px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 uppercase">En
                             Curso</span>
                         <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-calendar-days mr-1"></i>
-                            2023 - Presente</span>
+                            2024 - Presente</span>
                     </div>
                     <h3 class="font-display font-bold text-xl text-white">Ingeniería de Sistemas e Informática</h3>
                     <p class="text-cyan-400 font-semibold text-sm mb-3">Universidad Tecnológica del Perú (UTP)</p>
@@ -727,7 +799,7 @@
                         <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-calendar-days mr-1"></i>
                             Finalizado</span>
                     </div>
-                    <h3 class="font-display font-bold text-xl text-white">Técnico en Desarrollo de Software con IA</h3>
+                    <h3 class="font-display font-bold text-xl text-white">Técnico en Ingenieria de Software con IA</h3>
                     <p class="text-emerald-400 font-semibold text-sm mb-3">Carrera Profesional Técnica</p>
                     <p class="text-slate-400 text-sm leading-relaxed">
                         Formación enfocada en la programación nativa estructurada y orientada a objetos (POO), con
@@ -919,6 +991,20 @@
 
     <!-- ==================== CONTROL SCRIPTS ==================== -->
     <script src="assets/js/script.js"></script>
+    <!-- Código JavaScript para controlar el movimiento -->
+    <script>
+        function moveSlider(direction) {
+            const slider = document.getElementById('project-slider');
+            // Calculamos el ancho de una tarjeta + el espacio (gap) para un desplazamiento exacto
+            const cardWidth = slider.querySelector('.project-card').offsetWidth + 24;
+
+            if (direction === 'left') {
+                slider.scrollLeft -= cardWidth;
+            } else {
+                slider.scrollLeft += cardWidth;
+            }
+        }
+    </script>
 </body>
 
 </html>

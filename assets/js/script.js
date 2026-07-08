@@ -142,14 +142,14 @@ tarjeta.addEventListener('touchstart', iniciarArrastre, { passive: true });
 window.addEventListener('touchmove', (e) => {
     if (!arrastrando) return;
 
-    // 🌟 AQUÍ ESTÁ EL CAMBIO: Cancela por completo el scroll nativo del navegador móvil
+    // AQUÍ ESTÁ EL CAMBIO: Cancela por completo el scroll nativo del navegador móvil
     if (e.cancelable) {
         e.preventDefault();
     }
 
     const touch = e.touches[0];
     window.requestAnimationFrame(() => moverCarnet(touch.clientX, touch.clientY));
-}, { passive: false }); // 🌟 CAMBIADO A FALSE: Obligatorio para permitir el preventDefault()
+}, { passive: false }); //  CAMBIADO A FALSE: Obligatorio para permitir el preventDefault()
 
 window.addEventListener('touchend', finalizarArrastre);
 window.addEventListener('touchcancel', finalizarArrastre);

@@ -31,7 +31,7 @@
     "votacion": {
         "title": "Votación Electrónica Escolar",
         "type": "Proyecto de Prácticas Profesionales",
-        "desc": "Desarrollo institutional creado para agilizar y modernizar el sufragio de estudiantes a cargos de representación estudiantil.",
+        "desc": "Desarrollo institucional creado para agilizar y modernizar el sufragio de estudiantes a cargos de representación estudiantil.",
         "challenge": "Los procesos electorales anteriores en papel tomaban horas de conteo manual y eran vulnerables a reclamos y errores de cálculo en el escrutinio de votos.",
         "solution": "Desarrollé un sistema web ágil e interactivo con PHP, MySQL y Javascript nativo. Al cerrar las urnas virtuales, el sistema realiza la sumatoria matemática y visualiza gráficos con los resultados finales de inmediato, garantizando transparencia absoluta.",
         "stack": [
@@ -41,5 +41,20 @@
             "HTML5 & CSS3"
         ],
         "icon": "fa-square-poll-horizontal"
+    },
+    "biomedic": {
+        "title": "Sitio Corporativo & Catálogo — DCG BIOMEDIC",
+        "type": "Producción Real - Sector Médico",
+        "desc": "Plataforma web profesional para una empresa dedicada a la venta, mantenimiento preventivo y reparación especializada de equipos biomédicos.",
+        "challenge": "Mostrar un catálogo extenso de dispositivos de alta tecnología clasificados por áreas (UCI, diagnóstico, quirófano) sin recargar la página ni ralentizar la navegación con múltiples archivos HTML estáticos.",
+        "solution": "Estructuré una solución frontend desacoplada modelando el inventario de equipos médicos dentro de un archivo de datos JSON centralizado. Implementé lógica en JavaScript moderno (ES6) para leer de forma asíncrona, renderizar y filtrar dinámicamente las tarjetas de productos según el área médica seleccionada.",
+        "stack": [
+            "HTML5",
+            "CSS3 Estilizado",
+            "JavaScript (ES6+)",
+            "JSON Data Parsing",
+            "UI/UX Responsivo"
+        ],
+        "icon": "fa-heart-pulse"
     }
 }
