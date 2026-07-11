@@ -293,25 +293,65 @@ window.addEventListener('click', (e) => {
 });
 
 // ==========================================================================
-// 6. --- GESTIÓN FORMULARIO DE CONTACTO ---
+// 6. --- GESTIÓN FORMULARIO DE CONTACTO (ENVÍO A WHATSAPP SINCRONIZADO) ---
 // ==========================================================================
 function handleContactSubmit(event) {
     event.preventDefault();
 
     const form = document.getElementById('contact-form');
     const alert = document.getElementById('success-alert');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
+    // 1. Extraer los datos usando los IDs reales de tu HTML (name, email, subject, message)
+    const nombre = document.getElementById('name')?.value || 'Usuario Anónimo';
+    const correo = document.getElementById('email')?.value || 'No especificado';
+    const asunto = document.getElementById('subject')?.value || 'Contacto desde Portafolio';
+    const mensaje = document.getElementById('message')?.value || '';
+
+    // 2. Tu número de teléfono con código de país (Ejemplo: 51 para Perú)
+    // ⚠️ REEMPLAZA ESTE NÚMERO POR EL TUYO REAL
+    const telefonoMiWsp = "51951833077";
+
+    // 3. Formatear la plantilla limpia con Emojis y Markdown para WhatsApp
+    const textoMensaje =
+        `🚀 *NUEVO CONTACTO DESDE EL PORTAFOLIO* 🚀
+
+👤 *Nombre:* ${nombre}
+📧 *Correo:* ${correo}
+📌 *Asunto:* ${asunto}
+
+💬 *Mensaje:*
+${mensaje}`;
+
+    // 4. Codificar de forma segura la cadena de texto para la URL
+    const mensajeCodificado = encodeURIComponent(textoMensaje);
+    const urlWhatsApp = `https://api.whatsapp.com/send?phone=${telefonoMiWsp}&text=${mensajeCodificado}`;
+
+    // 5. Feedback visual inmediato en la interfaz
     form.classList.add('opacity-50', 'pointer-events-none');
+    if (submitBtn) {
+        submitBtn.innerHTML = `Abriendo WhatsApp... <i class="fa-solid fa-spinner fa-spin text-xs ml-1"></i>`;
+    }
 
     setTimeout(() => {
+        // Abrir la API de WhatsApp en una pestaña externa
+        window.open(urlWhatsApp, '_blank');
+
+        // Restaurar botón y limpiar formulario
+        if (submitBtn) {
+            submitBtn.innerHTML = `Enviar Mensaje <i class="fa-solid fa-paper-plane text-xs ml-1"></i>`;
+        }
         form.reset();
         form.classList.remove('opacity-50', 'pointer-events-none');
-        alert.classList.remove('hidden');
 
-        setTimeout(() => {
-            alert.classList.add('hidden');
-        }, 6000);
-    }, 1000);
+        // Desplegar alerta de éxito en el Portafolio
+        if (alert) {
+            alert.classList.remove('hidden');
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 6000);
+        }
+    }, 800);
 }
 
 // ==========================================================================
